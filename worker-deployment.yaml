@@ -6,7 +6,7 @@ metadata:
     run: worker
   name: worker
 spec:
-  replicas: 5
+  replicas: 1
   selector:
     matchLabels:
       run: worker
