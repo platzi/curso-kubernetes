@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: webui
+  name: webui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: webui
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: webui
+    spec:
+      containers:
+      - image: dockercoins/webui:v0.1
+        name: webui
+        resources: {}
+status: {}
