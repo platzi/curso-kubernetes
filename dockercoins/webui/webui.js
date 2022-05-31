@@ -2,31 +2,40 @@ var express = require('express');
 var app = express();
 var redis = require('redis');
 
-var client = redis.createClient(6379, 'redis');
-client.on("error", function (err) {
-    console.error("Redis error", err);
-});
+const client = redis.createClient({ url: 'redis://redis:6379' });
+client.on('error', (err) => console.log('Redis Client Error', err));
 
-app.get('/', function (req, res) {
+app.get('/', function (_req, res) {
     res.redirect('/index.html');
 });
 
-app.get('/json', function (req, res) {
-    client.hlen('wallet', function (err, coins) {
-        client.get('hashes', function (err, hashes) {
-            var now = Date.now() / 1000;
-            res.json( {
-                coins: coins,
-                hashes: hashes,
-                now: now
-            });
-        });
-    });
+app.get('/json', async (_req, res) => {
+    try {
+        await client.connect();
+        const coins = await client.HLEN('wallet')
+        const hashes = await client.GET('hashes')
+        const now = Date.now() / 1000;
+        const transactionCoin = {
+            coins: coins,
+            hashes: hashes,
+            now: now
+        }
+        res.json(transactionCoin);
+    } catch (error) {
+        console.log(error)
+        const transactionCoinError = {
+            coins: 0,
+            hashes: 0,
+            now: 0
+        }
+        res.json(transactionCoinError)
+    } finally {
+        await client.disconnect();
+    }
 });
 
 app.use(express.static('files'));
-
-var server = app.listen(80, function () {
+app.listen(80,  () => {
     console.log('WEBUI running on port 80');
 });
 

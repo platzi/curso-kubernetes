@@ -1,4 +1,4 @@
-FROM node:4-slim
+FROM node:14
 RUN npm install express
 RUN npm install redis
 COPY files/ /files/
