@@ -64,7 +64,7 @@ if __name__ == "__main__":
             work_loop()
         except:
             log.exception("In work loop:")
-            log.error("Waiting 10s and restarting.")
-            time.sleep(10)
+            log.error("Waiting 5s and restarting.")
+            time.sleep(5)
 
 
